@@ -1,50 +1,39 @@
-const cls = "w-12 h-12 border border-black flex items-center justify-center hover:bg-black hover:text-white transition-colors group duration-250"
+import type { Site } from '@/lib/site'
 
-export default function SocialLinks() {
+const iconClass = 'flex size-9 items-center justify-center rounded-full border border-ink/30 text-ink transition-all duration-250 hover:-translate-y-[3px] hover:border-acc hover:text-acc'
+
+const outline = { fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' } as const
+
+// A link is hidden when its value is missing from site.yaml.
+export default function SocialLinks({ site }: { site: Site }) {
+  const { github, linkedin, instagram, email } = site.links
   return (
-    <div className="flex justify-between">
-      <div className="flex gap-6">
-        <a href="https://github.com/Syzygicality" target="_blank" rel="noreferrer" aria-label="GitHub" className={cls}>
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="group-hover:stroke-white">
-            <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.28 1.15-.28 2.35 0 3.5-.73 1.02-1.08 2.25-1 3.5 0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
-            <path d="M9 18c-4.51 2-5-2-7-2" />
-          </svg>
+    <div className="mt-[18px] flex flex-wrap gap-2.5">
+      {github && (
+        <a href={github} target="_blank" rel="noopener" aria-label="GitHub" title="GitHub" className={iconClass}>
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.37.5 0 5.87 0 12.5c0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58v-2.02c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.73.08-.73 1.2.09 1.84 1.24 1.84 1.24 1.07 1.84 2.81 1.31 3.5 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.34-5.47-5.95 0-1.31.47-2.39 1.24-3.23-.13-.31-.54-1.53.11-3.19 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.29-1.55 3.3-1.23 3.3-1.23.65 1.66.24 2.88.12 3.19.77.84 1.23 1.92 1.23 3.23 0 4.62-2.81 5.64-5.49 5.94.43.37.82 1.1.82 2.22v3.29c0 .32.22.7.83.58C20.57 22.3 24 17.8 24 12.5 24 5.87 18.63.5 12 .5z" /></svg>
         </a>
-        <a href="https://linkedin.com/in/eddie-p-wang/" target="_blank" rel="noreferrer" aria-label="LinkedIn" className={cls}>
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="group-hover:stroke-white">
-            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-            <rect width="4" height="12" x="2" y="9" />
-            <circle cx="4" cy="4" r="2" />
-          </svg>
+      )}
+      {linkedin && (
+        <a href={linkedin} target="_blank" rel="noopener" aria-label="LinkedIn" title="LinkedIn" className={iconClass}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.8 0 0 .77 0 1.73v20.54C0 23.22.8 24 1.77 24h20.45c.98 0 1.78-.78 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z" /></svg>
         </a>
-        <a href="https://instagram.com/wanderings67/" target="_blank" rel="noreferrer" aria-label="Instagram" className={cls}>
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="group-hover:stroke-white">
-            <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
-            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
-          </svg>
+      )}
+      {instagram && (
+        <a href={instagram} target="_blank" rel="noopener" aria-label="Instagram" title="Instagram" className={iconClass}>
+          <svg width="18" height="18" viewBox="0 0 24 24" {...outline} aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none" /></svg>
         </a>
-        <a href="/resume.pdf" download="Edison_Wang_Resume.pdf" aria-label="Download Resume" className={cls}>
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="group-hover:hidden">
-            <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
-            <polyline points="14 2 14 8 20 8" />
-            <line x1="16" y1="13" x2="8" y2="13" />
-            <line x1="16" y1="17" x2="8" y2="17" />
-            <line x1="10" y1="9" x2="8" y2="9" />
-          </svg>
-          <span className="hidden group-hover:block font-mono text-[10px] font-bold tracking-tighter">
-            Hire me pls 😭🙏🏻
-          </span>
+      )}
+      {site.resume && (
+        <a href={site.resume} target="_blank" rel="noopener" aria-label="Resume" title="Resume" className={iconClass}>
+          <svg width="18" height="18" viewBox="0 0 24 24" {...outline} aria-hidden="true"><path d="M4 3h11l5 5v13H4z" /><path d="M14 3v6h6" /><path d="M8 13h8M8 17h6" /></svg>
         </a>
-      </div>
-      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="10" />
-        <ellipse cx="12" cy="12" rx="3" ry="10" />
-        <ellipse cx="12" cy="12" rx="7" ry="10" />
-        <line x1="2" y1="12" x2="22" y2="12" />
-        <path d="M3.6 16h16.8" />
-        <path d="M3.6 8h16.8" />
-      </svg>
+      )}
+      {email && (
+        <a href={`mailto:${email}`} aria-label="Email" title="Email" className={iconClass}>
+          <svg width="18" height="18" viewBox="0 0 24 24" {...outline} aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2" /><path d="m3 6 9 7 9-7" /></svg>
+        </a>
+      )}
     </div>
   )
 }

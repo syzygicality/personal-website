@@ -5,20 +5,25 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "start": "next start"
   },
   "dependencies": {
-    "next": "^15.3.1",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "js-yaml": "^4.3.2",
+    "next": "^16.4.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "react-force-graph-2d": "^1.29.2",
     "tailwindcss": "^4.1.18"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.18",
+    "@types/js-yaml": "^4.0.9",
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "typescript": "^5"
+  },
+  "allowScripts": {
+    "sharp@0.34.5": true
   }
 }

@@ -1,14 +1,83 @@
 @import "tailwindcss";
 
-html, a:hover {
-  cursor: crosshair;
+@theme inline {
+  --font-sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-mono: var(--font-space-mono), monospace;
+
+  --color-bg: var(--bg);
+  --color-ink: var(--ink);
+  --color-ink2: var(--ink2);
+  --color-acc: var(--acc);
+  --color-acc2: var(--acc2);
+  --color-card: var(--card);
+  --color-card2: var(--card2);
+
+  --ease-out-soft: cubic-bezier(.2, .7, .2, 1);
+
+  --animate-gradient-shift: gradient-shift 5s linear infinite;
+  --animate-proj-in: proj-in .6s cubic-bezier(.2, .7, .2, 1) both;
 }
 
-@keyframes systemBoot {
-  0% { opacity: 0; transform: translateY(10px); filter: brightness(2); }
-  100% { opacity: 1; transform: translateY(0); }
+/* Keep in sync with PALETTE in src/lib/palette.ts (the graph canvas reads it). */
+:root {
+  --bg: #f1f2f5;
+  --ink: #0b0f1a;
+  --ink2: #3b4152;
+  --acc: #2b4bff;
+  --acc2: #0096e6;
+  --card: #e7e9f0;
+  --card2: #dcdfe8;
 }
 
-.animate-boot {
-  animation: systemBoot 2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+@keyframes gradient-shift {
+  0% { background-position: 0% 50% }
+  100% { background-position: 200% 50% }
+}
+
+@keyframes proj-in {
+  from { opacity: 0; transform: translateY(20px) }
+  to { opacity: 1; transform: none }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--acc);
+  color: var(--bg);
+}
+
+@utility wrap {
+  max-width: 1040px;
+  margin-inline: auto;
+  padding-inline: 20px;
+
+  @media (width >= 48rem) {
+    padding-inline: 76px;
+  }
+}
+
+/* Measuring-tape divider between sections. */
+@utility ruler {
+  height: 12px;
+  opacity: .38;
+  background-image:
+    linear-gradient(var(--ink), var(--ink)),
+    linear-gradient(var(--ink), var(--ink)),
+    repeating-linear-gradient(90deg, var(--ink) 0 1.5px, transparent 1.5px 10%),
+    repeating-linear-gradient(90deg, var(--ink) 0 1px, transparent 1px 5%),
+    repeating-linear-gradient(90deg, var(--ink) 0 1px, transparent 1px 1%);
+  background-size: 100% 1px, 1.5px 12px, 100% 12px, 100% 8px, 100% 4px;
+  background-position: 0 50%, 100% 50%, 0 50%, 0 50%, 0 50%;
+  background-repeat: no-repeat;
 }
