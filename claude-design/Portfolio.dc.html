@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics="">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg,#f1f2f5);color:var(--ink,#0b0f1a);font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow-x:hidden}
+  ::selection{background:var(--acc,#2b4bff);color:var(--bg,#f1f2f5)}
+  a{color:inherit;text-decoration:none}
+  @keyframes gradientshift{0%{background-position:0% 50%}100%{background-position:200% 50%}}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes projIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+</style>
+<script src="./image-slot.js"></script>
+<script src="https://unpkg.com/react-force-graph-2d"></script>
+</helmet>
+
+
+<sc-if value="{{ gridLines }}" hint-placeholder-val="{{ false }}">
+  <div aria-hidden="true" style="position:fixed;inset:0;z-index:1;pointer-events:none;max-width:1040px;margin:0 auto;padding:0 76px;display:grid;grid-template-columns:repeat(12,1fr);gap:24px">
+    <div style="border-left:1px solid color-mix(in srgb,var(--acc,#2b4bff) 14%,transparent);border-right:1px solid color-mix(in srgb,var(--acc,#2b4bff) 14%,transparent)"></div><div style="border-right:1px solid color-mix(in srgb,var(--acc,#2b4bff) 14%,transparent)"></div><div style="border-right:1px solid color-mix(in srgb,var(--acc,#2b4bff) 14%,transparent)"></div><div style="border-right:1px solid color-mix(in srgb,var(--acc,#2b4bff) 14%,transparent)"></div><div style="border-right:1px solid color-mix(in srgb,var(--acc,#2b4bff) 14%,transparent)"></div><div style="border-right:1px solid color-mix(in srgb,var(--acc,#2b4bff) 14%,transparent)"></div><div style="border-right:1px solid color-mix(in srgb,var(--acc,#2b4bff) 14%,transparent)"></div><div style="border-right:1px solid color-mix(in srgb,var(--acc,#2b4bff) 14%,transparent)"></div><div style="border-right:1px solid color-mix(in srgb,var(--acc,#2b4bff) 14%,transparent)"></div><div style="border-right:1px solid color-mix(in srgb,var(--acc,#2b4bff) 14%,transparent)"></div><div style="border-right:1px solid color-mix(in srgb,var(--acc,#2b4bff) 14%,transparent)"></div><div style="border-right:1px solid color-mix(in srgb,var(--acc,#2b4bff) 14%,transparent)"></div>
+  </div>
+</sc-if>
+
+<!-- NAV -->
+<nav style="position:fixed;top:0;left:0;right:0;z-index:50;background:color-mix(in srgb,var(--bg,#f1f2f5) 78%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid color-mix(in srgb,var(--ink,#0b0f1a) 12%,transparent)">
+  <div style="max-width:1040px;margin:0 auto;padding:12px 76px;display:flex;align-items:center;justify-content:space-between">
+    <a href="#top" onClick="{{ navTop }}" style="display:flex;align-items:center;gap:12px">
+      <span style="width:26px;height:26px;border-radius:50%;background:linear-gradient(120deg,var(--acc2,#0096e6),var(--acc,#2b4bff));display:inline-block"></span>
+      <span style="font:700 14px 'Helvetica Neue',Arial;letter-spacing:-.01em">{{ fullName }}</span>
+    </a>
+    <div style="display:flex;align-items:center;gap:28px;font:400 12px 'Space Mono',monospace;letter-spacing:.06em">
+      <a href="#about" onClick="{{ navAbout }}" style="opacity:.7;transition:all .25s cubic-bezier(.2,.7,.2,1)" style-hover="{{ hoverLink }}">About</a>
+      <a href="#experience" onClick="{{ navExperience }}" style="opacity:.7;transition:all .25s cubic-bezier(.2,.7,.2,1)" style-hover="{{ hoverLink }}">Experience</a>
+      <a href="#work" onClick="{{ navWork }}" style="opacity:.7;transition:all .25s cubic-bezier(.2,.7,.2,1)" style-hover="{{ hoverLink }}">Projects</a>
+      
+      
+    </div>
+  </div>
+</nav>
+
+<div id="top"></div>
+
+<div style="position:fixed;top:50%;right:18px;transform:translateY(-50%);z-index:60;display:flex;flex-direction:column;gap:2px;position:fixed;background:color-mix(in srgb,var(--bg,#f1f2f5) 90%,transparent);backdrop-filter:blur(8px);border:1px solid color-mix(in srgb,var(--ink,#0b0f1a) 18%,transparent);border-radius:999px;padding:4px">
+  <div aria-hidden="true" style="{{ togglePillStyle }}"></div>
+  <button onClick="{{ setViewNormal }}" style="{{ toggleNormalStyle }}" aria-label="Page view">Site</button>
+  <button onClick="{{ setViewGraph }}" style="{{ toggleGraphStyle }}" aria-label="Graph view">Graph</button>
+</div>
+
+<sc-if value="{{ isNormalView }}" hint-placeholder-val="{{ true }}">
+<div style="position:relative">
+<pre id="ascii-hero" aria-hidden="true" style="position:absolute;top:0;left:0;width:100%;height:100%;margin:0;z-index:0;pointer-events:none;font:400 12px/13px 'Space Mono',monospace;color:var(--ink,#0b0f1a);opacity:.14;white-space:pre;overflow:hidden"></pre>
+<pre id="ascii-spot" aria-hidden="true" style="position:absolute;top:0;left:0;width:100%;height:100%;margin:0;z-index:0;pointer-events:none;font:400 12px/13px 'Space Mono',monospace;color:var(--ink,#0b0f1a);opacity:0;white-space:pre;overflow:hidden;transition:opacity .35s"></pre>
+
+<!-- ================= HERO ================= -->
+<section data-ascii-bounds="" style="position:relative;min-height:auto;padding:104px 0 24px;overflow:hidden">
+  <div style="position:relative;z-index:2;max-width:1040px;margin:0 auto;padding:0 76px;display:grid;grid-template-columns:.9fr 1.35fr;gap:36px;align-items:center">
+    <div style="order:2;position:relative">
+      <div aria-hidden="true" style="position:absolute;z-index:-1;top:-45%;left:-55%;width:210%;height:190%;background:radial-gradient(58% 52% at 50% 50%,var(--bg,#f1f2f5) 0%,color-mix(in srgb,var(--bg,#f1f2f5) 90%,transparent) 42%,color-mix(in srgb,var(--bg,#f1f2f5) 0%,transparent) 74%)"></div>
+      
+      <h1 data-reveal="" style="margin:0;font:700 clamp(46px,7.5vw,112px)/.9 'Helvetica Neue',Arial;letter-spacing:-.035em">
+        <sc-if value="{{ siteReady }}" hint-placeholder-val="{{ false }}">{{ site.name.first }}</sc-if><br>
+        <span style="background:linear-gradient(120deg,var(--acc2,#0096e6),var(--acc,#2b4bff),var(--acc2,#0096e6));background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:gradientshift 5s linear infinite"><sc-if value="{{ siteReady }}" hint-placeholder-val="{{ false }}">{{ site.name.last }}</sc-if></span>
+      </h1>
+      <p data-reveal="" data-reveal-delay="120" style="max-width:420px;margin:18px 0 0;font:400 16px/1.5 'Helvetica Neue',Arial;color:var(--ink2,#3b4152)"><sc-if value="{{ siteReady }}" hint-placeholder-val="{{ false }}">{{ site.tagline }}</sc-if></p>
+      <div data-reveal="" data-reveal-delay="300" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:18px">
+        <sc-if value="{{ site.links.github }}" hint-placeholder-val="{{ true }}"><a href="{{ site.links.github }}" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub" style="width:36px;height:36px;display:flex;align-items:center;justify-content:center;border:1px solid color-mix(in srgb,var(--ink,#0b0f1a) 30%,transparent);border-radius:50%;color:var(--ink,#0b0f1a);transition:all .25s" style-hover="{{ hoverIcon }}"><svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.37.5 0 5.87 0 12.5c0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58v-2.02c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.73.08-.73 1.2.09 1.84 1.24 1.84 1.24 1.07 1.84 2.81 1.31 3.5 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.34-5.47-5.95 0-1.31.47-2.39 1.24-3.23-.13-.31-.54-1.53.11-3.19 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.29-1.55 3.3-1.23 3.3-1.23.65 1.66.24 2.88.12 3.19.77.84 1.23 1.92 1.23 3.23 0 4.62-2.81 5.64-5.49 5.94.43.37.82 1.1.82 2.22v3.29c0 .32.22.7.83.58C20.57 22.3 24 17.8 24 12.5 24 5.87 18.63.5 12 .5z"></path></svg></a></sc-if>
+        <sc-if value="{{ site.links.linkedin }}" hint-placeholder-val="{{ true }}"><a href="{{ site.links.linkedin }}" target="_blank" rel="noopener" aria-label="LinkedIn" title="LinkedIn" style="width:36px;height:36px;display:flex;align-items:center;justify-content:center;border:1px solid color-mix(in srgb,var(--ink,#0b0f1a) 30%,transparent);border-radius:50%;color:var(--ink,#0b0f1a);transition:all .25s" style-hover="{{ hoverIcon }}"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.8 0 0 .77 0 1.73v20.54C0 23.22.8 24 1.77 24h20.45c.98 0 1.78-.78 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"></path></svg></a></sc-if>
+        <sc-if value="{{ site.links.instagram }}" hint-placeholder-val="{{ true }}"><a href="{{ site.links.instagram }}" target="_blank" rel="noopener" aria-label="Instagram" title="Instagram" style="width:36px;height:36px;display:flex;align-items:center;justify-content:center;border:1px solid color-mix(in srgb,var(--ink,#0b0f1a) 30%,transparent);border-radius:50%;color:var(--ink,#0b0f1a);transition:all .25s" style-hover="{{ hoverIcon }}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"></circle></svg></a></sc-if>
+        <sc-if value="{{ site.resume }}" hint-placeholder-val="{{ true }}"><a href="{{ site.resume }}" target="_blank" rel="noopener" aria-label="Resume" title="Resume" style="width:36px;height:36px;display:flex;align-items:center;justify-content:center;border:1px solid color-mix(in srgb,var(--ink,#0b0f1a) 30%,transparent);border-radius:50%;color:var(--ink,#0b0f1a);transition:all .25s" style-hover="{{ hoverIcon }}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 3h11l5 5v13H4z"></path><path d="M14 3v6h6"></path><path d="M8 13h8M8 17h6"></path></svg></a></sc-if>
+        <sc-if value="{{ site.links.email }}" hint-placeholder-val="{{ true }}"><a href="{{ mailto }}" aria-label="Email" title="Email" style="width:36px;height:36px;display:flex;align-items:center;justify-content:center;border:1px solid color-mix(in srgb,var(--ink,#0b0f1a) 30%,transparent);border-radius:50%;color:var(--ink,#0b0f1a);transition:all .25s" style-hover="{{ hoverIcon }}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m3 6 9 7 9-7"></path></svg></a></sc-if>
+      </div><div data-reveal="" data-reveal-delay="220" style="display:flex;gap:22px;margin-top:22px;font:400 12px 'Space Mono',monospace;letter-spacing:.06em">
+        
+        
+      </div>
+      
+    </div>
+    <div data-reveal="" data-reveal-delay="160" style="order:1;justify-self:start;width:100%;max-width:280px">
+      <div style="position:relative;aspect-ratio:4/5;border:1px solid var(--ink,#0b0f1a);background:var(--card,#e7e9f0);overflow:hidden">
+        <sc-if value="{{ siteReady }}" hint-placeholder-val="{{ false }}"><div role="img" aria-label="{{ fullName }}" style="{{ headshotStyle }}"></div></sc-if>
+        
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:10px;font:400 10px 'Space Mono',monospace;letter-spacing:.08em;opacity:.55">
+        
+      </div>
+    </div>
+  </div>
+  
+</section>
+
+<!-- ================= BIO ================= -->
+<div style="max-width:1040px;margin:0 auto;padding:0 76px"></div>
+<section id="about" style="position:relative;z-index:2;padding:8px 0 48px;scroll-margin-top:90px">
+  <div style="max-width:1040px;margin:0 auto;padding:0 76px">
+    <div data-reveal="" style="display:flex;align-items:baseline;gap:20px;margin-bottom:28px">
+      <h2 style="margin: 0; font: 700 clamp(32px,5vw,72px)/.92 'Helvetica Neue',Arial; letter-spacing: -.035em; font-size: 48px">About</h2>
+      
+    </div>
+    <div data-reveal="" data-reveal-delay="120" style="font:400 15px/1.55 'Helvetica Neue',Arial;color:var(--ink2,#3b4152)">
+      <sc-for list="{{ aboutParas }}" as="para" hint-placeholder-count="1"><p style="margin:0 0 14px">{{ para }}</p></sc-for>
+    </div>
+  </div>
+</section>
+
+<!-- ================= EXPERIENCE ROADMAP ================= -->
+<div style="max-width:1040px;margin:0 auto;padding:0 76px"><div aria-hidden="true" style="height:12px;opacity:.38;background-image:linear-gradient(var(--ink,#0b0f1a),var(--ink,#0b0f1a)),linear-gradient(var(--ink,#0b0f1a),var(--ink,#0b0f1a)),repeating-linear-gradient(90deg,var(--ink,#0b0f1a) 0 1.5px,transparent 1.5px 10%),repeating-linear-gradient(90deg,var(--ink,#0b0f1a) 0 1px,transparent 1px 5%),repeating-linear-gradient(90deg,var(--ink,#0b0f1a) 0 1px,transparent 1px 1%);background-size:100% 1px,1.5px 12px,100% 12px,100% 8px,100% 4px;background-position:0 50%,100% 50%,0 50%,0 50%,0 50%;background-repeat:no-repeat"></div></div>
+<section id="experience" style="position:relative;z-index:2;padding:48px 0 48px">
+  <div style="max-width:1040px;margin:0 auto;padding:0 76px">
+    <div data-reveal="" style="display:flex;align-items:baseline;gap:20px;margin-bottom:28px">
+      <h2 style="margin: 0; font: 700 clamp(32px,5vw,72px)/.92 'Helvetica Neue',Arial; letter-spacing: -.035em; font-size: 48px">Experience</h2>
+      <button onClick="{{ openSkills }}" style="margin-left:auto;align-self:center;display:inline-flex;align-items:center;gap:10px;font:700 12px 'Space Mono',monospace;letter-spacing:.08em;padding:12px 22px;border-radius:999px;border:1px solid var(--ink,#0b0f1a);background:transparent;color:var(--ink,#0b0f1a);cursor:pointer;transition:all .25s" style-hover="{{ hoverSkillsBtn }}">View skills<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg></button>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:18px">
+      <sc-if value="{{ siteReady }}" hint-placeholder-val="{{ false }}"><sc-for list="{{ experience }}" as="exp" hint-placeholder-count="2">
+      <div style="display:flex;flex-direction:column;gap:16px;padding:22px;background:var(--card,#e7e9f0);color:var(--ink,#0b0f1a);border:1px solid color-mix(in srgb,var(--ink,#0b0f1a) 14%,transparent)">
+        <div style="display:flex;align-items:flex-start;gap:14px">
+          <div role="img" aria-label="{{ exp.company }}" style="{{ exp.logoStyle }}"></div>
+          <div style="display:flex;flex-direction:column;gap:5px;min-width:0;flex:1">
+            <div style="font:700 21px/1.1 'Helvetica Neue',Arial;text-wrap:balance;letter-spacing:-.02em">{{ exp.role }}</div>
+            <div style="font:400 13px 'Space Mono',monospace;letter-spacing:.04em">{{ exp.company }}</div>
+            <div style="font:400 12px 'Space Mono',monospace;letter-spacing:.06em;color:var(--ink2,#3b4152)">{{ exp.start }} – <sc-if value="{{ exp.current }}" hint-placeholder-val="{{ false }}"><span style="color:var(--acc,#2b4bff);font-weight:700">Present</span></sc-if><sc-if value="{{ exp.notCurrent }}" hint-placeholder-val="{{ true }}">{{ exp.end }}</sc-if></div>
+          </div>
+        </div>
+        <p style="margin:0;font:400 15px/1.5 'Helvetica Neue',Arial;text-wrap:pretty">{{ exp.blurb }}</p>
+      </div>
+      </sc-for></sc-if>
+    </div>
+  </div>
+</section>
+
+<div onClick="{{ closeSkills }}" style="{{ skillsOverlayStyle }}">
+    <div onClick="{{ stopProp }}" style="{{ skillsPanelStyle }}">
+      <button onClick="{{ closeSkills }}" aria-label="Close" style="position:absolute;top:20px;right:20px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border:1px solid color-mix(in srgb,var(--ink,#0b0f1a) 30%,transparent);border-radius:50%;background:transparent;color:var(--ink,#0b0f1a);cursor:pointer" style-hover="{{ hoverIcon }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+      <h2 style="margin:0 0 24px;font:700 clamp(28px,4vw,44px)/1 'Helvetica Neue',Arial;letter-spacing:-.03em">Skills</h2>
+      <div style="display:flex;flex-direction:column;border-bottom:1px solid color-mix(in srgb,var(--ink,#0b0f1a) 14%,transparent)">
+        <sc-for list="{{ skillGroups }}" as="grp" hint-placeholder-count="4">
+        <div style="display:grid;grid-template-columns:150px 1fr;gap:16px;align-items:baseline;padding:14px 0;border-top:1px solid color-mix(in srgb,var(--ink,#0b0f1a) 14%,transparent)"><div style="font:700 12px 'Space Mono',monospace;letter-spacing:.1em;color:var(--acc,#2b4bff)">{{ grp.name }}</div><div style="display:flex;flex-wrap:wrap;gap:8px 20px;font:400 14px 'Helvetica Neue',Arial;color:var(--ink2,#3b4152)"><sc-for list="{{ grp.items }}" as="sk" hint-placeholder-count="6"><span style-hover="{{ hoverSkill }}">{{ sk }}</span></sc-for></div></div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+<!-- ================= WORK ================= -->
+<div style="max-width:1040px;margin:0 auto;padding:0 76px"><div aria-hidden="true" style="height:12px;opacity:.38;background-image:linear-gradient(var(--ink,#0b0f1a),var(--ink,#0b0f1a)),linear-gradient(var(--ink,#0b0f1a),var(--ink,#0b0f1a)),repeating-linear-gradient(90deg,var(--ink,#0b0f1a) 0 1.5px,transparent 1.5px 10%),repeating-linear-gradient(90deg,var(--ink,#0b0f1a) 0 1px,transparent 1px 5%),repeating-linear-gradient(90deg,var(--ink,#0b0f1a) 0 1px,transparent 1px 1%);background-size:100% 1px,1.5px 12px,100% 12px,100% 8px,100% 4px;background-position:0 50%,100% 50%,0 50%,0 50%,0 50%;background-repeat:no-repeat"></div></div>
+<section id="work" style="position:relative;z-index:2;padding:48px 0 64px">
+  <div style="max-width:1040px;margin:0 auto;padding:0 76px">
+    <div data-reveal="" style="display:flex;align-items:baseline;gap:20px;margin-bottom:4px">
+      <h2 style="margin: 0; font: 700 clamp(32px,5vw,72px)/.92 'Helvetica Neue',Arial; letter-spacing: -.035em; font-size: 48px">Projects</h2>
+    </div>
+  </div>
+  <div style="max-width:1040px;margin:24px auto 0;padding:0 76px">
+    <div style="{{ projGridStyle }}">
+      <sc-if value="{{ siteReady }}" hint-placeholder-val="{{ false }}"><sc-for list="{{ projects }}" as="p" hint-placeholder-count="3">
+      <div style="{{ p.wrapStyle }}">
+      <a href="{{ p.url }}" target="_blank" rel="noopener" style="height:100%;display:flex;flex-direction:column;background:var(--card,#e7e9f0);border:1px solid color-mix(in srgb,var(--ink,#0b0f1a) 18%,transparent);overflow:hidden;transition:transform .45s cubic-bezier(.2,.7,.2,1),box-shadow .45s,border-color .3s" style-hover="{{ hoverCard }}">
+        <div style="{{ p.frameStyle }}">
+          <div role="img" aria-label="{{ p.alt }}" style="{{ p.imgStyle }}" style-hover="{{ hoverPhoto }}"></div>
+        </div>
+        <div style="padding:16px 16px 18px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px">
+            <div style="font:700 clamp(19px,2vw,25px)/1 'Helvetica Neue',Arial;letter-spacing:-.02em">{{ p.name }}</div>
+            <div style="display:flex;align-items:center;opacity:.55"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"></path><path d="M8 7h9v9"></path></svg></div>
+          </div>
+          <p style="margin:9px 0 0;font:400 14px/1.45 'Helvetica Neue',Arial;color:var(--ink2,#3b4152)">{{ p.description }}</p>
+          <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:12px">
+            <sc-for list="{{ p.tags }}" as="t" hint-placeholder-count="4"><span style="font:400 11px 'Space Mono',monospace;padding:4px 9px;border:1px solid color-mix(in srgb,var(--ink,#0b0f1a) 25%,transparent);border-radius:20px">{{ t }}</span></sc-for>
+          </div>
+        </div>
+      </a>
+      </div>
+      </sc-for></sc-if>
+    </div>
+    <sc-if value="{{ projHasMore }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;justify-content:center;margin-top:28px">
+        <button type="button" onClick="{{ showMoreProjects }}" style="display:inline-flex;align-items:center;gap:10px;font:700 12px 'Space Mono',monospace;letter-spacing:.08em;padding:12px 22px;border-radius:999px;border:1px solid var(--ink,#0b0f1a);background:transparent;color:var(--ink,#0b0f1a);cursor:pointer;transition:all .25s" style-hover="{{ hoverSkillsBtn }}">See more<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></button>
+      </div>
+    </sc-if>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer style="position:relative;z-index:2;background:var(--ink,#0b0f1a);height:120px"></footer>
+</div>
+</sc-if>
+
+<sc-if value="{{ isGraphView }}" hint-placeholder-val="{{ false }}">
+<section data-graph-bounds="" style="position:relative;height:calc(100vh - 64px);margin-top:64px;overflow:hidden;background:var(--bg,#f1f2f5)">
+  <div style="position:absolute;top:14px;left:76px;z-index:2;font:400 12px 'Space Mono',monospace;letter-spacing:.06em;color:color-mix(in srgb,var(--ink,#0b0f1a) 60%,transparent);display:flex;gap:18px;background:var(--bg,#f1f2f5);border:1px solid color-mix(in srgb,var(--ink,#0b0f1a) 12%,transparent);padding:8px 12px">
+    <button type="button" onClick="{{ pickExp }}" style="appearance:none;background:transparent;border:0;padding:0;font:inherit;color:inherit;cursor:pointer;display:flex;align-items:center;gap:6px;transition:color .15s" style-hover="color:var(--ink,#0b0f1a)"><span style="width:9px;height:9px;border-radius:50%;background:var(--ink,#0b0f1a);display:inline-block"></span>Experience<sc-if value="{{ legendExpActive }}" hint-placeholder-val="{{ false }}"><span style="width:5px;height:5px;border-radius:50%;background:var(--acc,#2b4bff);display:inline-block"></span></sc-if></button>
+    <button type="button" onClick="{{ pickProj }}" style="appearance:none;background:transparent;border:0;padding:0;font:inherit;color:inherit;cursor:pointer;display:flex;align-items:center;gap:6px;transition:color .15s" style-hover="color:var(--ink,#0b0f1a)"><span style="width:9px;height:9px;border-radius:50%;background:var(--acc,#2b4bff);display:inline-block"></span>Project<sc-if value="{{ legendProjActive }}" hint-placeholder-val="{{ false }}"><span style="width:5px;height:5px;border-radius:50%;background:var(--acc,#2b4bff);display:inline-block"></span></sc-if></button>
+    <button type="button" onClick="{{ pickSkill }}" style="appearance:none;background:transparent;border:0;padding:0;font:inherit;color:inherit;cursor:pointer;display:flex;align-items:center;gap:6px;transition:color .15s" style-hover="color:var(--ink,#0b0f1a)"><span style="width:9px;height:9px;border-radius:50%;background:var(--acc2,#0096e6);display:inline-block"></span>Skill<sc-if value="{{ legendSkillActive }}" hint-placeholder-val="{{ false }}"><span style="width:5px;height:5px;border-radius:50%;background:var(--acc,#2b4bff);display:inline-block"></span></sc-if></button>
+  </div>
+  <x-import component-from-global-scope="ForceGraph2D" dc-props="{{ fgProps }}" hint-size="100%,100%"></x-import>
+</section>
+</sc-if>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:720}}">
+class Component extends DCLogic {
+  state = { site: null, projRows: 1, skillsOpen: false, view: 'normal', graphSize: { width: 900, height: 600 }, selId: null, hoverId: null, legendType: null };
+
+  navTo(id) {
+    return (e) => {
+      if (this.state.view !== 'graph') return;
+      e.preventDefault();
+      this.setState({ view: 'normal' }, () => requestAnimationFrame(() => requestAnimationFrame(() => {
+        const el = document.getElementById(id);
+        if (el) window.scrollTo({ top: id === 'top' ? 0 : el.getBoundingClientRect().top + window.scrollY - 64, behavior: 'smooth' });
+      })));
+    };
+  }
+
+  toggleLegend(type) { this.setState((s) => ({ legendType: s.legendType === type ? null : type, selId: null })); }
+
+  highlightSets() {
+    const { selId, legendType } = this.state;
+    const focusId = selId;
+    if (!focusId && !legendType) return null;
+    const payload = this.buildFgPayload();
+    const nodes = new Set(), links = new Set();
+    const idOf = (e) => (typeof e === 'object' ? e.id : e);
+    if (focusId) {
+      nodes.add(focusId);
+      payload.links.forEach((l) => {
+        const s = idOf(l.source), t = idOf(l.target);
+        if (s === focusId || t === focusId) { links.add(l); nodes.add(s); nodes.add(t); }
+      });
+    }
+    if (legendType) {
+      payload.nodes.forEach((n) => { if (n.type === legendType) nodes.add(n.id); });
+      payload.links.forEach((l) => { if (nodes.has(idOf(l.source)) && nodes.has(idOf(l.target))) links.add(l); });
+    }
+    return { nodes, links, focusId };
+  }
+
+  renderVals() {
+    const isGraphView = this.state.view === 'graph';
+    return {
+      showAscii: true,
+      ...this.siteVals(),
+      gridLines: false,
+      isNormalView: this.state.view === 'normal',
+      isGraphView,
+      setViewNormal: () => this.setState({ view: 'normal' }),
+      navTop: this.navTo('top'),
+      navAbout: this.navTo('about'),
+      navExperience: this.navTo('experience'),
+      navWork: this.navTo('work'),
+      setViewGraph: () => this.setState({ view: 'graph' }),
+      togglePillStyle: {
+        position: 'absolute', left: '4px', right: '4px', top: '4px', height: '64px', borderRadius: '999px',
+        background: 'var(--ink,#0b0f1a)', zIndex: 0, pointerEvents: 'none',
+        transform: isGraphView ? 'translateY(66px)' : 'translateY(0)',
+        transition: 'transform .38s cubic-bezier(.65,0,.25,1)'
+      },
+      toggleNormalStyle: {
+        position: 'relative', zIndex: 1, height: '64px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+        font: '700 10px "Space Mono",monospace', letterSpacing: '.06em', padding: '0 14px', borderRadius: '999px',
+        border: 'none', cursor: 'pointer', writingMode: 'vertical-rl', transform: 'rotate(180deg)', background: 'transparent',
+        color: !isGraphView ? 'var(--bg,#f1f2f5)' : 'var(--ink,#0b0f1a)', transition: 'color .3s'
+      },
+      toggleGraphStyle: {
+        position: 'relative', zIndex: 1, height: '64px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+        font: '700 10px "Space Mono",monospace', letterSpacing: '.06em', padding: '0 14px', borderRadius: '999px',
+        border: 'none', cursor: 'pointer', writingMode: 'vertical-rl', transform: 'rotate(180deg)', background: 'transparent',
+        color: isGraphView ? 'var(--bg,#f1f2f5)' : 'var(--ink,#0b0f1a)', transition: 'color .3s'
+      },
+      fgProps: isGraphView ? this.buildFgProps() : null,
+      legendExpActive: this.state.legendType === 'experience',
+      legendProjActive: this.state.legendType === 'project',
+      legendSkillActive: this.state.legendType === 'skill',
+      pickExp: () => this.toggleLegend('experience'),
+      pickProj: () => this.toggleLegend('project'),
+      pickSkill: () => this.toggleLegend('skill'),
+      skillsOpen: this.state.skillsOpen,
+      openSkills: () => this.setState({ skillsOpen: true }),
+      closeSkills: () => this.setState({ skillsOpen: false }),
+      stopProp: (e) => e.stopPropagation(),
+      skillsOverlayStyle: {
+        position: 'fixed', inset: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px',
+        background: this.state.skillsOpen ? 'color-mix(in srgb,var(--ink,#0b0f1a) 60%,transparent)' : 'color-mix(in srgb,var(--ink,#0b0f1a) 0%,transparent)',
+        backdropFilter: this.state.skillsOpen ? 'blur(2px)' : 'blur(0px)',
+        opacity: this.state.skillsOpen ? 1 : 0,
+        pointerEvents: this.state.skillsOpen ? 'auto' : 'none',
+        transition: 'opacity .35s cubic-bezier(.2,.7,.2,1), background .35s cubic-bezier(.2,.7,.2,1), backdrop-filter .35s'
+      },
+      skillsPanelStyle: {
+        position: 'relative', width: '100%', maxWidth: '720px', maxHeight: '82vh', overflow: 'auto',
+        background: 'var(--bg,#f1f2f5)', border: '1px solid color-mix(in srgb,var(--ink,#0b0f1a) 20%,transparent)', padding: '36px',
+        transform: this.state.skillsOpen ? 'scale(1) translateY(0)' : 'scale(.94) translateY(14px)',
+        opacity: this.state.skillsOpen ? 1 : 0,
+        transition: 'transform .38s cubic-bezier(.2,.7,.2,1), opacity .32s cubic-bezier(.2,.7,.2,1)'
+      },
+      hoverLink: { opacity: 1, color: 'var(--acc,#2b4bff)', transform: 'translateY(-2px)' },
+      hoverSkill: { color: 'var(--acc2,#0096e6)', transform: 'translateX(4px)' },
+      hoverSkillsBtn: { background: 'var(--ink,#0b0f1a)', color: 'var(--bg,#f1f2f5)', transform: 'translateY(-2px)', boxShadow: '0 10px 22px -12px color-mix(in srgb,var(--ink,#0b0f1a) 50%,transparent)' },
+      hoverProject: { background: 'color-mix(in srgb,var(--acc,#2b4bff) 5%,transparent)', transform: 'translateX(6px)' },
+      hoverFoot: { opacity: 1, color: 'var(--acc2,#0096e6)' },
+      hoverIcon: { borderColor: 'var(--acc,#2b4bff)', color: 'var(--acc,#2b4bff)', transform: 'translateY(-3px)' },
+      hoverIconDark: { borderColor: 'var(--acc2,#0096e6)', color: 'var(--acc2,#0096e6)', transform: 'translateY(-3px)' },
+      hoverCard: { transform: 'translateY(-8px)', boxShadow: 'inset 0 4px 0 var(--acc,#2b4bff), 0 20px 44px -20px color-mix(in srgb,var(--ink,#0b0f1a) 50%,transparent)', borderColor: 'var(--acc,#2b4bff)' },
+      hoverPhoto: { transform: 'scale(1.08)' }
+    };
+  }
+
+  componentDidMount() {
+    this.loadSite();
+    this.applyPalette();
+    this._t0 = performance.now();
+    this.setupReveals();
+    this.setupScroll();
+    this.setupAscii();
+    this.setupCursorSpot();
+    this.setupGraphResize();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    this.applyPalette();
+    this.setupReveals();
+    if (prevState && (prevState.selId !== this.state.selId || prevState.legendType !== this.state.legendType)) {
+      const fg = this._fg;
+      if (fg) {
+        if (fg.refresh) fg.refresh();
+        if (fg.pauseAnimation && fg.resumeAnimation) { fg.pauseAnimation(); fg.resumeAnimation(); }
+      }
+    }
+  }
+
+  componentWillUnmount() {
+    if (this._raf) cancelAnimationFrame(this._raf);
+    if (this._onScroll) window.removeEventListener('scroll', this._onScroll);
+    if (this._onMouseMove) window.removeEventListener('mousemove', this._onMouseMove);
+    if (this._onCursorScroll) window.removeEventListener('scroll', this._onCursorScroll);
+    if (this._cursorIdle) clearTimeout(this._cursorIdle);
+    this.teardownGraphResize();
+  }
+
+    pal() {
+    const P = {
+      signal: { bg: '#f4f2ec', ink: '#0e0e0e', ink2: '#42403a', acc: '#ff2d55', acc2: '#ff5e3a', card: '#efece4', card2: '#e6e2d8' },
+      moss:   { bg: '#eef0e7', ink: '#11160e', ink2: '#3d4537', acc: '#2e7a4c', acc2: '#8aa82f', card: '#e4e8da', card2: '#d9decd' },
+      cobalt: { bg: '#f1f2f5', ink: '#0b0f1a', ink2: '#3b4152', acc: '#2b4bff', acc2: '#0096e6', card: '#e7e9f0', card2: '#dcdfe8' },
+      night:  { bg: '#131312', ink: '#f2efe8', ink2: '#b3aea3', acc: '#ff5e3a', acc2: '#ffb238', card: '#1c1c1a', card2: '#262624' }
+    };
+    return P.cobalt;
+  }
+  inkA(a) { const h = this.pal().ink; const n = parseInt(h.slice(1), 16); return 'rgba(' + (n >> 16) + ',' + ((n >> 8) & 255) + ',' + (n & 255) + ',' + a + ')'; }
+  nodeCol(n) { const p = this.pal(); return n.type === 'skill' ? p.acc2 : n.type === 'project' ? p.acc : p.ink; }
+  applyPalette() {
+    const p = this.pal(), s = document.documentElement.style;
+    Object.keys(p).forEach((k) => s.setProperty('--' + k, p[k]));
+    
+  }
+
+  loadSite() {
+    Promise.all([
+      import('https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.mjs'),
+      fetch('site.yaml', { cache: 'no-store' }).then((r) => { if (!r.ok) throw new Error('site.yaml ' + r.status); return r.text(); })
+    ]).then(([yaml, text]) => {
+      this._fgPayload = null; this._fgProps = null;
+      this.setState({ site: yaml.load(text) || {} }, () => requestAnimationFrame(() => window.dispatchEvent(new Event('resize'))));
+    }).catch((e) => console.error('Could not load site.yaml:', e));
+  }
+
+  siteVals() {
+    const site = this.state.site || { name: {}, links: {} };
+    const arr = (v) => (Array.isArray(v) ? v : v == null ? [] : [v]);
+    const str = (v) => (v == null ? '' : String(v).trim());
+    const perRow = Math.max(1, site.projects_per_row || 3);
+    const gcd = (a, b) => (b ? gcd(b, a % b) : a);
+    let cols = 1; for (let i = 1; i <= perRow; i++) cols = cols * i / gcd(cols, i);
+    const all = arr(site.projects);
+    const shown = all.slice(0, this.state.projRows * perRow);
+    const projects = shown.map((p, i) => {
+      const rowStart = Math.floor(i / perRow) * perRow;
+      const inRow = Math.min(perRow, all.length - rowStart);
+      const wrapStyle = { gridColumn: 'span ' + (cols / inRow), display: 'flex', minWidth: 0 };
+      if (i >= perRow) wrapStyle.animation = 'projIn .6s cubic-bezier(.2,.7,.2,1) ' + ((i % perRow) * 60) + 'ms both';
+      return {
+        name: str(p.name), url: str(p.url) || '#', image: str(p.image), alt: str(p.image_alt || p.name),
+        description: str(p.description), tags: arr(p.tags), wrapStyle,
+        frameStyle: { position: 'relative', aspectRatio: '16/10', overflow: 'hidden', background: p.image_background || 'var(--card2,#dcdfe8)', borderBottom: '1px solid color-mix(in srgb,var(--ink,#0b0f1a) 10%,transparent)' },
+        imgStyle: { position: 'absolute', inset: p.image_fit === 'contain' ? '0 18px' : 0, backgroundImage: (str(p.image) ? 'url("' + str(p.image) + '")' : 'none'), backgroundRepeat: 'no-repeat', backgroundSize: p.image_fit || 'cover', backgroundPosition: p.image_position || 'center', transition: 'transform .6s cubic-bezier(.2,.7,.2,1)' }
+      };
+    });
+    const experience = arr(site.experience).map((e) => {
+      const current = str(e.end).toLowerCase() === 'present';
+      return {
+        role: str(e.role), company: str(e.company), start: str(e.start), end: str(e.end), blurb: str(e.blurb),
+        logo: str(e.logo), current, notCurrent: !current,
+        logoStyle: { width: '44px', height: '44px', flex: 'none', backgroundColor: e.logo_background || 'transparent', backgroundImage: (str(e.logo) ? 'url("' + str(e.logo) + '")' : 'none'), backgroundRepeat: 'no-repeat', backgroundPosition: 'center', backgroundSize: e.logo_fit || 'contain', borderRadius: (e.logo_radius || 0) + 'px' }
+      };
+    });
+    const skills = site.skills || {};
+    return {
+      site,
+      siteReady: !!this.state.site,
+      headshotStyle: { position: 'absolute', inset: 0, backgroundImage: (str(site.headshot) ? 'url("' + str(site.headshot) + '")' : 'none'), backgroundSize: 'cover', backgroundPosition: 'center 30%', backgroundRepeat: 'no-repeat' },
+      fullName: [site.name.first, site.name.last].filter(Boolean).join(' '),
+      mailto: site.links.email ? 'mailto:' + site.links.email : '',
+      aboutParas: arr(site.about).map(str),
+      experience,
+      skillGroups: Object.keys(skills).map((k) => ({ name: k, items: arr(skills[k]) })),
+      projects,
+      projGridStyle: { display: 'grid', gridTemplateColumns: 'repeat(' + cols + ',minmax(0,1fr))', gap: '18px' },
+      projHasMore: shown.length < all.length,
+      showMoreProjects: () => this.setState((s) => ({ projRows: s.projRows + 1 }))
+    };
+  }
+
+  buildFgPayload() {
+    if (this._fgPayload) return this._fgPayload;
+    const site = this.state.site || {};
+    const lst = (v) => (Array.isArray(v) ? v : []);
+    const CATS = [{ name: 'ALL', skills: Array.from(new Set([].concat(...lst(site.experience).map((e) => lst(e.skills)), ...lst(site.projects).map((p) => lst(p.skills))))) }];
+    const EXPERIENCES = lst(site.experience).map((e, i) => ({ id: 'exp' + i, label: e.role + ' @ ' + e.company, skills: lst(e.skills) }));
+    const PROJECTS = lst(site.projects).map((p, i) => ({ id: 'proj' + i, label: p.name, skills: lst(p.skills) }));
+    const nodes = [];
+    const links = [];
+    const skillSet = {};
+    CATS.forEach((cat) => {
+      cat.skills.forEach((name, si) => {
+        const id = 'skill:' + name;
+        nodes.push({ id, type: 'skill', label: name, color: '#ff5e3a', val: 2 });
+        skillSet[name] = id;
+      });
+    });
+    EXPERIENCES.forEach((exp) => {
+      nodes.push({ id: exp.id, type: 'experience', label: exp.label, color: '#0e0e0e', val: 6 });
+      exp.skills.forEach((s) => { if (skillSet[s]) links.push({ source: exp.id, target: skillSet[s], kind: 'exp' }); });
+    });
+    PROJECTS.forEach((proj) => {
+      nodes.push({ id: proj.id, type: 'project', label: proj.label, color: '#ff2d55', val: 8 });
+      proj.skills.forEach((s) => { if (skillSet[s]) links.push({ source: proj.id, target: skillSet[s], kind: 'proj' }); });
+    });
+    const linked = new Set();
+    links.forEach((l) => { linked.add(l.source); linked.add(l.target); });
+    this._fgPayload = { nodes: nodes.filter((n) => n.type !== 'skill' || linked.has(n.id)), links };
+    return this._fgPayload;
+  }
+
+  setupGraphResize() {
+    if (this._onGraphResize) return;
+    const update = () => this.setState({ graphSize: { width: window.innerWidth, height: window.innerHeight - 64 } });
+    update();
+    window.addEventListener('resize', update);
+    this._onGraphResize = update;
+  }
+
+  teardownGraphResize() {
+    if (this._onGraphResize) { window.removeEventListener('resize', this._onGraphResize); this._onGraphResize = null; }
+  }
+
+  labelCollide() {
+    let nodes = [];
+    const halfW = (n) => Math.max(34, n.label.length * (n.type === 'skill' ? 7.4 : 8) + 22);
+    const halfH = 36;
+    const force = (alpha) => {
+      const k = 0.6 * alpha + 0.55;
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const a = nodes[i], b = nodes[j];
+          const dx = b.x - a.x, dy = b.y - a.y;
+          const mx = halfW(a) + halfW(b), my = halfH * 2;
+          const ox = mx - Math.abs(dx), oy = my - Math.abs(dy);
+          if (ox <= 0 || oy <= 0) continue;
+          if (ox / mx < oy / my) {
+            const push = (ox / 2) * k * (dx < 0 ? -1 : 1);
+            a.vx -= push; b.vx += push;
+          } else {
+            const push = (oy / 2) * k * (dy < 0 ? -1 : 1);
+            a.vy -= push; b.vy += push;
+          }
+        }
+      }
+    };
+    force.initialize = (ns) => { nodes = ns; };
+    return force;
+  }
+
+  buildFgProps() {
+    if (!this.state.site) return null;
+    if (this._fgProps) {
+      const p = this._fgProps;
+      p.width = this.state.graphSize.width;
+      p.height = this.state.graphSize.height;
+      // fresh identities for paint-only props so the canvas redraws,
+      // while simulation-control props stay stable (no reheat/shudder)
+      p.linkColor = (l) => p._linkColor(l);
+      p.linkWidth = (l) => p._linkWidth(l);
+      p.nodeCanvasObject = (n, c, s) => p._nodeCanvasObject(n, c, s);
+      p.onRenderFramePre = (c, s) => p._onRenderFramePre(c, s);
+      return p;
+    }
+    const payload = this.buildFgPayload();
+    const hlNow = () => this.highlightSets();
+    const dim = (id) => { const hl = hlNow(); return hl && !hl.nodes.has(id); };
+    this._fgProps = {
+      graphData: payload,
+      onNodeClick: (n) => this.setState((s) => ({ selId: s.selId === n.id ? null : n.id, legendType: null })),
+      onBackgroundClick: () => this.setState({ selId: null, legendType: null }),
+      onNodeDragEnd: (n) => { n.fx = undefined; n.fy = undefined; },
+      width: this.state.graphSize.width,
+      height: this.state.graphSize.height,
+      backgroundColor: 'rgba(0,0,0,0)',
+      nodeRelSize: 1,
+      nodeLabel: (n) => n.label,
+      linkColor: (l) => { const hl = hlNow(); return !hl ? this.inkA(.28) : hl.links.has(l) ? this.inkA(.6) : this.inkA(.07); },
+      linkWidth: (l) => { const hl = hlNow(); return hl && hl.links.has(l) ? 1.8 : 1; },
+      cooldownTicks: 400,
+      d3VelocityDecay: 0.32,
+      onRenderFramePre: (ctx, globalScale) => {
+        const fg = this._fg;
+        if (!fg || !fg.screen2GraphCoords) return;
+        if (!isFinite(globalScale) || globalScale <= 0) return;
+        const w = this.state.graphSize.width, h = this.state.graphSize.height;
+        const tl = fg.screen2GraphCoords(0, 0), br = fg.screen2GraphCoords(w, h);
+        if (!tl || !br || !isFinite(tl.x) || !isFinite(br.x) || !isFinite(tl.y) || !isFinite(br.y)) return;
+        let step = 32;
+        while (step * globalScale < 10 && step < 4096) step *= 2;
+        const x0 = Math.floor(tl.x / step) * step, y0 = Math.floor(tl.y / step) * step;
+        const r = 1 / globalScale;
+        ctx.fillStyle = this.inkA(.16);
+        for (let x = x0; x <= br.x; x += step) {
+          for (let y = y0; y <= br.y; y += step) {
+            ctx.beginPath();
+            ctx.arc(x, y, r, 0, 2 * Math.PI);
+            ctx.fill();
+          }
+        }
+      },
+      ref: (fg) => {
+        this._fg = fg;
+        if (!fg || this._fgTuned === fg) return;
+        this._fgTuned = fg;
+        const small = Math.min(this.state.graphSize.width, this.state.graphSize.height) < 700;
+        fg.d3Force('charge').strength(small ? -380 : -700).distanceMax(1200);
+        fg.d3Force('link').distance(200).strength(0.12);
+        fg.d3Force('collide', this.labelCollide());
+        const c = fg.d3Force('center');
+        if (c && c.strength) c.strength(0.04);
+        fg.d3ReheatSimulation && fg.d3ReheatSimulation();
+      },
+      nodeCanvasObject: (node, ctx, globalScale) => {
+        if (!Number.isFinite(node.x) || !Number.isFinite(node.y) || !isFinite(globalScale) || globalScale <= 0) return;
+        const hl = hlNow();
+        const faded = hl && !hl.nodes.has(node.id);
+        const isFocus = hl && hl.focusId === node.id;
+        const r = ((3 + 2.1 * Math.sqrt(node.val || 1)) * (isFocus ? 1.35 : 1)) / globalScale;
+        ctx.save();
+        ctx.globalAlpha = faded ? 0.18 : 1;
+        if (isFocus) {
+          ctx.beginPath();
+          ctx.arc(node.x, node.y, r + 5 / globalScale, 0, 2 * Math.PI);
+          ctx.strokeStyle = this.nodeCol(node);
+          ctx.lineWidth = 1 / globalScale;
+          ctx.stroke();
+        }
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, r, 0, 2 * Math.PI);
+        ctx.fillStyle = this.nodeCol(node);
+        ctx.fill();
+        ctx.lineWidth = 2 / globalScale;
+        ctx.strokeStyle = this.pal().bg;
+        ctx.stroke();
+        // labels are screen-space (constant px) while collide reserves graph units:
+        // at low zoom there is not enough room for every label, so skills thin out
+        const showLabel = node.type !== 'skill' || globalScale > 0.45 || (hl && hl.nodes.has(node.id));
+        if (showLabel) {
+          const fs = (node.type === 'skill' ? 10 : 11.5) / globalScale;
+          const lh = fs * 1.15;
+          ctx.font = '700 ' + fs + 'px "Space Mono",monospace';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'top';
+          ctx.fillStyle = this.pal().ink;
+          const parts = node.type === 'experience' && node.label.includes(' @ ')
+            ? node.label.split(' @ ').map((t, i) => (i ? '@ ' + t : t))
+            : [node.label];
+          parts.forEach((t, i) => ctx.fillText(t, node.x, node.y + r + 3 / globalScale + i * lh));
+        }
+        ctx.restore();
+      },
+      nodePointerAreaPaint: (node, color, ctx, globalScale) => {
+        const r = (3 + 2.1 * Math.sqrt(node.val || 1)) / (globalScale || 1) + 2;
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, r, 0, 2 * Math.PI);
+        ctx.fillStyle = color;
+        ctx.fill();
+      }
+    };
+    const p = this._fgProps;
+    p._linkColor = p.linkColor;
+    p._linkWidth = p.linkWidth;
+    p._nodeCanvasObject = p.nodeCanvasObject;
+    p._onRenderFramePre = p.onRenderFramePre;
+    return p;
+  }
+
+  setupCursorSpot() {
+    const spot = () => document.getElementById('ascii-spot');
+    const updateMask = (clientX, clientY) => {
+      const el = spot(); if (!el) return;
+      const px = clientX + window.scrollX, py = clientY + window.scrollY;
+      const mask = 'radial-gradient(90px circle at ' + px + 'px ' + py + 'px, #000 0%, transparent 72%)';
+      el.style.webkitMaskImage = mask;
+      el.style.maskImage = mask;
+    };
+    const onMove = (e) => {
+      this._lastClientX = e.clientX; this._lastClientY = e.clientY;
+      const el = spot(); if (!el) return;
+      updateMask(e.clientX, e.clientY);
+      el.style.opacity = '0.45';
+      clearTimeout(this._cursorIdle);
+      this._cursorIdle = setTimeout(() => { const s = spot(); if (s) s.style.opacity = '0'; }, 900);
+    };
+    const onScroll = () => {
+      if (this._lastClientX == null) return;
+      updateMask(this._lastClientX, this._lastClientY);
+    };
+    window.addEventListener('mousemove', onMove, { passive: true });
+    window.addEventListener('scroll', onScroll, { passive: true });
+    this._onMouseMove = onMove;
+    this._onCursorScroll = onScroll;
+  }
+
+  setupReveals() {
+    return;
+    const els = Array.from(document.querySelectorAll('[data-reveal]')).filter(el => !el.dataset.revInit);
+    if (!els.length) return;
+    els.forEach(el => {
+      el.dataset.revInit = '1';
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(26px)';
+      el.style.transition = 'opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1)';
+    });
+    if (!this._io) {
+      this._io = new IntersectionObserver((ents) => {
+        ents.forEach(e => {
+          if (e.isIntersecting) {
+            const el = e.target;
+            const d = parseInt(el.getAttribute('data-reveal-delay') || '0', 10);
+            setTimeout(() => { el.style.opacity = '1'; el.style.transform = 'none'; }, d);
+            this._io.unobserve(el);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+    }
+    els.forEach(el => this._io.observe(el));
+  }
+
+  setupScroll() {
+    const onScroll = () => {
+      const h = document.documentElement;
+      const sc = h.scrollTop || document.body.scrollTop || 0;
+      const max = h.scrollHeight - h.clientHeight;
+      const bar = document.getElementById('progress');
+      if (bar) bar.style.width = (max > 0 ? (sc / max) * 100 : 0) + '%';
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+    this._onScroll = onScroll;
+  }
+
+  setupAscii() {
+    const chars = ' .:-=+*#%@';
+    let last = 0;
+    const frame = (now) => {
+      this._raf = requestAnimationFrame(frame);
+      if (now - last < 55) return;
+      last = now;
+      const t = now - this._t0;
+      const showAscii = true;
+      const intensity = 0.5;
+
+      const hero = document.getElementById('ascii-hero');
+      if (hero) {
+        if (!showAscii) {
+          hero.style.opacity = '0';
+        } else {
+          const heroSection = document.querySelector('[data-ascii-bounds]');
+          if (heroSection) {
+            const hEnd = heroSection.offsetTop + heroSection.offsetHeight;
+            const mask = 'linear-gradient(180deg,#000 0,#000 ' + hEnd + 'px,transparent ' + (hEnd + 140) + 'px)';
+            hero.style.webkitMaskImage = mask;
+            hero.style.maskImage = mask;
+          }
+          const w = hero.clientWidth, hgt = hero.clientHeight;
+          const cw = 7.2, lh = 13;
+          const cols = Math.max(0, Math.floor(w / cw));
+          const rows = Math.max(0, Math.floor(hgt / lh));
+          if (cols && rows) {
+            let out = '';
+            for (let y = 0; y < rows; y++) {
+              for (let x = 0; x < cols; x++) {
+                const val =
+                  Math.sin(x * 0.13 + t * 0.0016) +
+                  Math.sin(y * 0.19 - t * 0.0012) +
+                  Math.sin((x + y) * 0.08 + t * 0.0009) +
+                  Math.sin(Math.hypot(x - cols / 2, (y - rows / 2) * 1.7) * 0.14 - t * 0.0018);
+                const n = (val + 4) / 8;
+                out += chars[Math.max(0, Math.min(chars.length - 1, Math.floor(n * chars.length)))];
+              }
+              out += '\n';
+            }
+            hero.textContent = out;
+          }
+          hero.style.opacity = String(0.16 + intensity * 0.22);
+        }
+      }
+
+      const spot = document.getElementById('ascii-spot');
+      if (spot && hero) spot.textContent = hero.textContent;
+
+      const port = document.getElementById('ascii-portrait');
+      if (port) {
+        const w = port.clientWidth, hgt = port.clientHeight;
+        const cw = 6.6, lh = 11;
+        const cols = Math.max(0, Math.floor(w / cw));
+        const rows = Math.max(0, Math.floor(hgt / lh));
+        if (cols && rows) {
+          let out = '';
+          for (let y = 0; y < rows; y++) {
+            for (let x = 0; x < cols; x++) {
+              const r = Math.hypot((x - cols / 2) * 1.1, (y - rows / 2) * 1.7);
+              const val = Math.sin(r * 0.45 - t * 0.004) + Math.sin(x * 0.3 + t * 0.002);
+              const n = (val + 2) / 4;
+              out += chars[Math.max(0, Math.min(chars.length - 1, Math.floor(n * chars.length)))];
+            }
+            out += '\n';
+          }
+          port.textContent = out;
+          port.style.opacity = showAscii ? '0.5' : '0.18';
+        }
+      }
+    };
+    this._raf = requestAnimationFrame(frame);
+  }
+}
+</script>
+</body>
+</html>

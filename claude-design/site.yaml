@@ -1,0 +1,145 @@
+# ─────────────────────────────────────────────────────────────
+#  Site content. Everything on the page (and the graph view)
+#  is read from this file. Edit, save, reload.
+#  Image paths are relative to Portfolio.dc.html.
+# ─────────────────────────────────────────────────────────────
+
+name:
+  first: Eddie
+  last: Wang
+
+tagline: >
+  Computer Science student at the University of Waterloo building backend
+  systems, infrastructure, and developer tools, from self-hosted Kubernetes
+  clusters to ground station software for satellites.
+
+headshot: headshot.png
+resume: Edison_Wang_Resume.pdf
+
+# Remove a line to hide that icon.
+links:
+  github: https://github.com/syzygicality
+  linkedin: https://linkedin.com/in/eddie-p-wang
+  instagram: https://www.instagram.com/wanderings67
+  email: eddie.wang1@uwaterloo.ca
+
+# One string per paragraph.
+about:
+  - >
+    I’m a first-year Computer Science student at the University of Waterloo
+    who likes the parts of software that keep everything else running: auth
+    servers, CI pipelines, data layers, and the clusters underneath them. I
+    lead the software subteam at UW Orbital, where we build ground station
+    software for satellites, and most recently interned at the Government of
+    Ontario building test automation for a healthcare portal. Outside of that
+    I run a Kubernetes homelab, build developer tools, and hold Meta’s
+    Back-End Developer Certificate.
+
+# Shown in the View skills panel. Add or rename categories freely.
+skills:
+  Languages: [Python, TypeScript, Go, JavaScript, SQL, C, Bash, HTML/CSS]
+  Frameworks: [FastAPI, Next.js, Django REST Framework, React, Tailwind CSS, SQLAlchemy, Pytest, Playwright]
+  Tools: [Git, GitHub, Node.js, Docker, Kubernetes, MS Azure, Linux, Postman, Claude Code]
+  Databases: [PostgreSQL, MongoDB, Redis, MS SQL Server]
+
+# end: present  → marks the current role (highlighted date).
+# skills        → links in the graph view (any names; not limited to the panel).
+# logo_fit      → cover | contain   logo_radius → px   logo_background → CSS color
+experience:
+  - role: Software Lead
+    company: UW Orbital
+    start: Sep 2025
+    end: present
+    logo: logo-orbital.png
+    logo_fit: cover
+    logo_radius: 12
+    logo_background: "#000000"
+    blurb: >
+      Lead the fullstack subteam building ground station software for our
+      satellite, which placed 1st at CSDC-7. I’ve worked across auth, the
+      backend data layer, and the team’s CI setup.
+    skills: [Python, FastAPI, Keycloak, Linux, Git]
+
+  - role: Software Developer Intern
+    company: Government of Ontario
+    start: May
+    end: Aug 2026
+    logo: logo-ontario.png
+    logo_fit: contain
+    blurb: >
+      Built a workflow automation framework and CI pipeline for a public
+      healthcare portal, including an AI-assisted reporter that helps diagnose
+      failing builds.
+    skills: [TypeScript, JavaScript, Playwright, Node.js, Azure DevOps, Azure OpenAI, SQL, MS SQL Server, HTML/CSS]
+
+# Cards shown per row; See more reveals one more row at a time.
+projects_per_row: 3
+
+# tags          → chips on the card
+# skills        → links in the graph view
+# image_fit     → cover | contain   image_position → CSS object-position
+projects:
+  - name: Memento
+    url: https://devpost.com/software/memento-mvyfio
+    image: proj-memento.png
+    image_alt: Memento knowledge graph view
+    image_fit: cover
+    image_position: center top
+    image_background: "#0a0a0a"
+    description: >
+      An AI-powered memory system that turns docs, Claude Code sessions, and
+      PR history into institutional memory, served over MCP and explorable as
+      a knowledge graph.
+    tags: [Python, FastAPI, MCP, React, MongoDB]
+    skills: [Python, FastAPI, MCP, TypeScript, React, MongoDB, GitHub, Claude Code]
+
+  - name: Resumakr
+    url: https://github.com/syzygicality/jakes-resume-compiler
+    image: proj-resumakr.png
+    image_alt: Compiled resume PDF
+    image_fit: cover
+    image_position: center top
+    image_background: "#ffffff"
+    description: >
+      A LaTeX compiler microservice. A Go gRPC server on Azure that turns
+      resume sources into PDFs quickly, with a lean container image.
+    tags: [Go, gRPC, Docker, MS Azure]
+    skills: [Go, gRPC, Docker, GitHub Actions, MS Azure, LaTeX]
+
+  - name: YYCirrus
+    url: https://eddies-drawboards.notion.site/Cirrus-68bea9fd4de4823c9f3781da5aa4dc56
+    image: proj-yycirrus.png
+    image_alt: k9s view of the YYCirrus cluster pods
+    image_fit: cover
+    image_position: left top
+    image_background: "#000000"
+    description: >
+      A multi-node K3s homelab hosting databases, APIs, and side projects,
+      deployed through a GitOps pipeline with GitHub Actions and ArgoCD.
+    tags: [Kubernetes, ArgoCD, Linux, Tailscale]
+    skills: [Kubernetes, ArgoCD, Linux, Tailscale, Cloudflare, GitHub Actions]
+
+  - name: Hackplate
+    url: https://github.com/syzygicality/fastapi-hackplate
+    image: proj-hackplate.png
+    image_alt: fastapi-hackplate API docs
+    image_fit: contain
+    image_background: "#ffffff"
+    description: >
+      An agent-first FastAPI meta-framework for rapid prototyping, with
+      swappable backend plugins and a developer CLI.
+    tags: [FastAPI, Redis, PostgreSQL, Keycloak]
+    skills: [Python, FastAPI, Redis, PostgreSQL, Keycloak, SQLAlchemy]
+
+  - name: MCC Auth
+    url: https://github.com/syzygicality/mcc-auth
+    image: proj-mcc-auth.png
+    image_alt: Raspberry Pi in its case, running the auth server
+    image_fit: cover
+    image_position: 50% 52%
+    image_background: "#d8d4cc"
+    description: >
+      A self-hosted Keycloak identity provider on a repurposed Linux machine,
+      handling OAuth2/OIDC for UW Orbital’s apps.
+    tags: [Keycloak, Linux, Bash, Prometheus]
+    skills: [Linux, Bash, Keycloak, PostgreSQL, Tailscale, Cloudflare, Prometheus]
