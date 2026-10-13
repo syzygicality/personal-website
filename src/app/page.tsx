@@ -31,7 +31,7 @@ export default function Home() {
             <Experience site={site} />
             <Ruler />
             <Projects projects={site.projects} perRow={site.projectsPerRow} />
-            <footer className="relative z-2 h-[120px] bg-ink" />
+            <footer className="relative z-2 h-30 bg-ink" />
           </div>
         }
         graph={<Graph site={site} />}

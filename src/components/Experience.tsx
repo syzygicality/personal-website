@@ -5,7 +5,7 @@ import SkillsDialog from './SkillsDialog'
 
 function ExperienceCard({ exp }: { exp: ExperienceItem }) {
   return (
-    <div className="flex flex-col gap-4 border border-ink/14 bg-card p-[22px] text-ink">
+    <div className="flex flex-col gap-4 border border-ink/14 bg-card p-5.5 text-ink">
       <div className="flex items-start gap-3.5">
         <div
           className="relative size-11 flex-none overflow-hidden"
@@ -15,7 +15,7 @@ function ExperienceCard({ exp }: { exp: ExperienceItem }) {
             <Image src={exp.logo} alt={exp.company} fill sizes="44px" style={{ objectFit: exp.logoFit }} />
           )}
         </div>
-        <div className="flex min-w-0 flex-1 flex-col gap-[5px]">
+        <div className="flex min-w-0 flex-1 flex-col gap-1.25">
           <div className="text-[21px]/[1.1] font-bold tracking-[-.02em] text-balance">{exp.role}</div>
           <div className="font-mono text-[13px] tracking-[.04em]">{exp.company}</div>
           <div className="font-mono text-xs tracking-[.06em] text-ink2">
@@ -35,7 +35,7 @@ export default function Experience({ site }: { site: Site }) {
         <SectionHeading title="Experience" className="mb-7">
           <SkillsDialog groups={site.skillGroups} />
         </SectionHeading>
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,420px),1fr))] gap-[18px]">
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,420px),1fr))] gap-4.5">
           {site.experience.map((exp) => <ExperienceCard key={`${exp.company}-${exp.role}`} exp={exp} />)}
         </div>
       </div>

@@ -97,7 +97,7 @@ export default function AsciiBackground({ boundsId }: { boundsId: string }) {
   return (
     <>
       <pre ref={heroRef} aria-hidden="true" className={`${preClass} opacity-14`} />
-      <pre ref={spotRef} aria-hidden="true" className={`${preClass} opacity-0 transition-opacity duration-[350ms]`} />
+      <pre ref={spotRef} aria-hidden="true" className={`${preClass} opacity-0 transition-opacity duration-350`} />
     </>
   )
 }

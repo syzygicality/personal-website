@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=none
 # ─────────────────────────────────────────────────────────────
 #  Site content. Everything on the page (and the graph view)
 #  is read from this file. Edit, save, reload.
@@ -9,9 +10,8 @@ name:
   last: Wang
 
 tagline: >
-  Computer Science student at the University of Waterloo building backend
-  systems, infrastructure, and developer tools, from self-hosted Kubernetes
-  clusters to ground station software for satellites.
+  Computer Science student at the University of Waterloo, Software Lead at
+  UW Orbital.
 
 headshot: headshot.png
 resume: Edison_Wang_Resume.pdf
@@ -26,14 +26,18 @@ links:
 # One string per paragraph.
 about:
   - >
-    I’m a first-year Computer Science student at the University of Waterloo
-    who likes the parts of software that keep everything else running: auth
-    servers, CI pipelines, data layers, and the clusters underneath them. I
-    lead the software subteam at UW Orbital, where we build ground station
-    software for satellites, and most recently interned at the Government of
-    Ontario building test automation for a healthcare portal. Outside of that
-    I run a Kubernetes homelab, build developer tools, and hold Meta’s
-    Back-End Developer Certificate.
+    Hi, I'm Edison, but you can call me Eddie! I'm a second-year Computer 
+    Science student at the University of Waterloo, looking for my second co-op.
+    I lead the software subteam at UW Orbital, where we build ground station
+    applications for our 6U satellite, from telemetry processing pipelines to 
+    fullstack mission control software. I most recently interned at the Government of
+    Ontario building a Playwright automation framework for CI/CD, simulating critical 
+    financial workflows and organizational processes.
+  - >
+    Outside of that I work on personal projects, shipping developer tools and AI applications.
+    Currently, I'm working on building my homelab, a 3-node Kubernetes cluster, to deploy my
+    projects, self-host useful applications, and develop DevOps experience. In total, my setup
+    saves me over $1000/mo in cloud cost avoidance. 
 
 # Shown in the View skills panel. Add or rename categories freely.
 skills:
@@ -56,9 +60,9 @@ experience:
     logo_background: "#000000"
     blurb: >
       Lead the fullstack subteam building ground station software for our
-      satellite, which placed 1st at CSDC-7. I’ve worked across auth, the
-      backend data layer, and the team’s CI setup.
-    skills: [Python, FastAPI, Keycloak, Linux, Git]
+      3U satellite, placing 1st at CSDC-7. I worked across auth,
+      backend data layer, and the team's CI setup.
+    skills: [Python, FastAPI, Keycloak, Linux, Docker]
 
   - role: Software Developer Intern
     company: Government of Ontario
@@ -70,7 +74,7 @@ experience:
       Built a workflow automation framework and CI pipeline for a public
       healthcare portal, including an AI-assisted reporter that helps diagnose
       failing builds.
-    skills: [TypeScript, JavaScript, Playwright, Node.js, Azure DevOps, Azure OpenAI, SQL, MS SQL Server, HTML/CSS]
+    skills: [TypeScript, JavaScript, Playwright, Node.js, MS Azure, Azure DevOps, Azure OpenAI, SQL, MS SQL Server, HTML/CSS]
 
 # Cards shown per row; See more reveals one more row at a time.
 projects_per_row: 3
@@ -117,7 +121,7 @@ projects:
       A multi-node K3s homelab hosting databases, APIs, and side projects,
       deployed through a GitOps pipeline with GitHub Actions and ArgoCD.
     tags: [Kubernetes, ArgoCD, Linux, Tailscale]
-    skills: [Kubernetes, ArgoCD, Linux, Tailscale, Cloudflare, GitHub Actions]
+    skills: [Kubernetes, Docker, ArgoCD, Linux, Tailscale, Cloudflare, GitHub Actions]
 
   - name: Hackplate
     url: https://github.com/syzygicality/fastapi-hackplate
@@ -129,7 +133,7 @@ projects:
       An agent-first FastAPI meta-framework for rapid prototyping, with
       swappable backend plugins and a developer CLI.
     tags: [FastAPI, Redis, PostgreSQL, Keycloak]
-    skills: [Python, FastAPI, Redis, PostgreSQL, Keycloak, SQLAlchemy]
+    skills: [Python, FastAPI, Redis, PostgreSQL, Keycloak, SQLAlchemy, MongoDB]
 
   - name: MCC Auth
     url: https://github.com/syzygicality/mcc-auth
@@ -140,6 +144,6 @@ projects:
     image_background: "#d8d4cc"
     description: >
       A self-hosted Keycloak identity provider on a repurposed Linux machine,
-      handling OAuth2/OIDC for UW Orbital’s apps.
+      handling OAuth2/OIDC for UW Orbital's apps.
     tags: [Keycloak, Linux, Bash, Prometheus]
     skills: [Linux, Bash, Keycloak, PostgreSQL, Tailscale, Cloudflare, Prometheus]

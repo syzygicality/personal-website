@@ -4,7 +4,7 @@ import SocialLinks from './SocialLinks'
 
 export default function Hero({ site }: { site: Site }) {
   return (
-    <section id="hero" className="relative overflow-hidden pt-[104px] pb-6">
+    <section id="hero" className="relative overflow-hidden pt-26 pb-6">
       <div className="wrap relative z-2 grid items-center gap-9 md:grid-cols-[.9fr_1.35fr]">
         <div className="relative md:order-2">
           <div
@@ -18,11 +18,11 @@ export default function Hero({ site }: { site: Site }) {
               {site.lastName}
             </span>
           </h1>
-          <p className="mt-[18px] mb-0 max-w-[420px] text-base/[1.5] text-ink2">{site.tagline}</p>
+          <p className="mt-4.5 mb-0 max-w-105 text-base/normal text-ink2">{site.tagline}</p>
           <SocialLinks site={site} />
         </div>
-        <div className="w-full max-w-[280px] justify-self-start md:order-1">
-          <div className="relative aspect-[4/5] overflow-hidden border border-ink bg-card">
+        <div className="w-full max-w-70 justify-self-start md:order-1">
+          <div className="relative aspect-4/5 overflow-hidden border border-ink bg-card">
             {site.headshot && (
               <Image
                 src={site.headshot}

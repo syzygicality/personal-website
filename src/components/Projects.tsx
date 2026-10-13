@@ -14,14 +14,14 @@ function ProjectCard({ project: p }: { project: Project }) {
       href={p.url}
       target="_blank"
       rel="noopener"
-      className="flex h-full w-full flex-col overflow-hidden border border-ink/18 bg-card transition-[transform,box-shadow,border-color] duration-[450ms] ease-out-soft hover:-translate-y-2 hover:border-acc hover:shadow-[inset_0_4px_0_var(--acc),0_20px_44px_-20px_color-mix(in_srgb,var(--ink)_50%,transparent)]"
+      className="flex h-full w-full flex-col overflow-hidden border border-ink/18 bg-card transition-[transform,box-shadow,border-color] duration-450 ease-out-soft hover:-translate-y-2 hover:border-acc hover:shadow-[inset_0_4px_0_var(--acc),0_20px_44px_-20px_color-mix(in_srgb,var(--ink)_50%,transparent)]"
     >
       <div
-        className="relative aspect-[16/10] overflow-hidden border-b border-ink/10 bg-card2"
+        className="relative aspect-16/10 overflow-hidden border-b border-ink/10 bg-card2"
         style={p.imageBackground ? { background: p.imageBackground } : undefined}
       >
         {p.image && (
-          <div className={`absolute transition-transform duration-[600ms] ease-out-soft hover:scale-[1.08] ${p.imageFit === 'contain' ? 'inset-y-0 inset-x-[18px]' : 'inset-0'}`}>
+          <div className={`absolute transition-transform duration-600 ease-out-soft hover:scale-[1.08] ${p.imageFit === 'contain' ? 'inset-y-0 inset-x-4.5' : 'inset-0'}`}>
             <Image
               src={p.image}
               alt={p.alt}
@@ -32,17 +32,17 @@ function ProjectCard({ project: p }: { project: Project }) {
           </div>
         )}
       </div>
-      <div className="px-4 pt-4 pb-[18px]">
+      <div className="px-4 pt-4 pb-4.5">
         <div className="flex items-baseline justify-between gap-3">
           <div className="text-[clamp(19px,2vw,25px)]/none font-bold tracking-[-.02em]">{p.name}</div>
           <div className="flex items-center opacity-55">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg>
           </div>
         </div>
-        <p className="mt-[9px] mb-0 text-sm/[1.45] text-ink2">{p.description}</p>
-        <div className="mt-3 flex flex-wrap gap-[5px]">
+        <p className="mt-2.25 mb-0 text-sm/[1.45] text-ink2">{p.description}</p>
+        <div className="mt-3 flex flex-wrap gap-1.25">
           {p.tags.map((t) => (
-            <span key={t} className="rounded-[20px] border border-ink/25 px-[9px] py-1 font-mono text-[11px]">{t}</span>
+            <span key={t} className="rounded-[20px] border border-ink/25 px-2.25 py-1 font-mono text-[11px]">{t}</span>
           ))}
         </div>
       </div>
@@ -65,7 +65,7 @@ export default function Projects({ projects, perRow }: { projects: Project[]; pe
       </div>
       <div className="wrap mt-6">
         <div
-          className="grid grid-cols-1 gap-[18px] md:grid-cols-[repeat(var(--cols),minmax(0,1fr))]"
+          className="grid grid-cols-1 gap-4.5 md:grid-cols-[repeat(var(--cols),minmax(0,1fr))]"
           style={{ '--cols': cols } as React.CSSProperties}
         >
           {shown.map((p, i) => {

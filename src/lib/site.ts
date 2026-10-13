@@ -1,9 +1,5 @@
-import fs from 'node:fs'
-import path from 'node:path'
-import yaml from 'js-yaml'
-import { cache } from 'react'
-
-const SITE_FILE = path.join(process.cwd(), 'content', 'site.yaml')
+// Parsed by loaders/yaml-loader.js; importing it (rather than reading with fs) gives hot reload in dev.
+import raw from '../../content/site.yaml'
 
 export type Experience = {
   role: string
@@ -59,9 +55,7 @@ const asset = (v: unknown) => {
   return !s || /^(https?:)?\/\//.test(s) || s.startsWith('/') ? s : '/' + s
 }
 
-// Read on every request in dev, so edits to site.yaml show up on reload.
-export const getSite = cache((): Site => {
-  const raw = (yaml.load(fs.readFileSync(SITE_FILE, 'utf8')) || {}) as Raw
+export function getSite(): Site {
   const name: Raw = raw.name || {}
   const links: Raw = raw.links || {}
   const skills: Raw = raw.skills || {}
@@ -108,4 +102,4 @@ export const getSite = cache((): Site => {
       skills: arr(p.skills).map(str),
     })),
   }
-})
+}

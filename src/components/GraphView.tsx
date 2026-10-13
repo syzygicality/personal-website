@@ -190,7 +190,7 @@ export default function GraphView({ site }: { site: Site }) {
 
   return (
     <section className="relative mt-16 h-[calc(100vh-64px)] overflow-hidden bg-bg">
-      <div className="absolute top-3.5 left-5 z-2 flex gap-[18px] border border-ink/12 bg-bg px-3 py-2 font-mono text-xs tracking-[.06em] text-ink/60 md:left-[76px]">
+      <div className="absolute top-3.5 left-5 z-2 flex gap-4.5 border border-ink/12 bg-bg px-3 py-2 font-mono text-xs tracking-[.06em] text-ink/60 md:left-19">
         {LEGEND.map(({ type, label, color }) => (
           <button
             key={type}
@@ -198,9 +198,9 @@ export default function GraphView({ site }: { site: Site }) {
             onClick={() => { setLegendType((t) => (t === type ? null : type)); setSelId(null) }}
             className="flex cursor-pointer appearance-none items-center gap-1.5 border-0 bg-transparent p-0 transition-colors duration-150 hover:text-ink"
           >
-            <span className={`inline-block size-[9px] rounded-full ${color}`} />
+            <span className={`inline-block size-2.25 rounded-full ${color}`} />
             {label}
-            {legendType === type && <span className="inline-block size-[5px] rounded-full bg-acc" />}
+            {legendType === type && <span className="inline-block size-1.25 rounded-full bg-acc" />}
           </button>
         ))}
       </div>

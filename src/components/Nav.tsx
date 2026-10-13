@@ -22,7 +22,7 @@ export default function Nav({ fullName }: { fullName: string }) {
     <nav className="fixed inset-x-0 top-0 z-50 border-b border-ink/12 bg-bg/78 backdrop-blur-[10px]">
       <div className="wrap flex items-center justify-between py-3">
         <a href="#top" onClick={onNav('top')} className="flex items-center gap-3">
-          <span className="inline-block size-[26px] rounded-full bg-linear-[120deg] from-acc2 to-acc" />
+          <span className="inline-block size-6.5 rounded-full bg-linear-[120deg] from-acc2 to-acc" />
           <span className="text-sm font-bold tracking-[-.01em]">{fullName}</span>
         </a>
         <div className="flex items-center gap-4 font-mono text-xs tracking-[.06em] md:gap-7">
